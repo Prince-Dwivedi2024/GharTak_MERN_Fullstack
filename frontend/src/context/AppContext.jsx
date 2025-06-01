@@ -8,7 +8,7 @@ const currencySymbol = "$"
 const AppContextProvider = (props) =>{
       const value = {
         workers, currencySymbol
-      }
+      } 
 
       return(
         <AppContext.Provider value={value}>
@@ -18,3 +18,5 @@ const AppContextProvider = (props) =>{
 }
 
  export default AppContextProvider
+
+ //this is Prince Dwivedi
