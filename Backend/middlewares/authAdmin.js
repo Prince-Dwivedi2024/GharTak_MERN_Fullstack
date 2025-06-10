@@ -10,9 +10,9 @@ const authAdmin = async (req, res, next) => {
       return res.json({ success: false, message: "Not Authorized, Login Again" });
     }
 
-    const token = authHeader.split(" ")[1]; // Extract the token from "Bearer <token>"
+    const adminToken = authHeader.split(" ")[1]; // Extract the token from "Bearer <token>"
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(adminToken, process.env.JWT_SECRET);
 
     if (decoded.admin !== process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD) {
       return res.json({ success: false, message: "Not Authorized, Login Again" });
