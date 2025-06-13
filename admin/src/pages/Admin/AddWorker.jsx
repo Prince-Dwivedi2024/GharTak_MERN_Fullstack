@@ -61,10 +61,23 @@ const AddWorker = () => {
 
       if (data.success) {
         toast.success(data.message);
+        //reset data to add another worker
+        setWorkImg(false)
+        setName('')
+        setPassword('')
+        setEmail('')
+        setAddress1('')
+        setAddress2('')
+        setDegree('')
+        setAbout('')
+        setFees('')
       } else {
         toast.error(data.message);
       }
-    } catch (error) {}
+    } catch (error) {
+      toast.error(error)
+      console.log
+    }
   };
 
   return (

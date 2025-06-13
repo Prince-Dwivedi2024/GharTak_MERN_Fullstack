@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Bona+Nova+SC:ital,wght@0,400;0,700;1,400&family=DM+Serif+Text:ital@0;1&family=Oswald:wght@200..700&family=Outfit:wght@100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,4 +6,8 @@
 
 ::-webkit-scrollbar{
     @apply hidden
+}
+
+*{
+    font-family: Outfit;
 }
