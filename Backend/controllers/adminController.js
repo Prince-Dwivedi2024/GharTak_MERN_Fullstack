@@ -115,4 +115,18 @@ const loginAdmin = async (req, resp) => {
   }
 };
 
-export { addWorker, loginAdmin };
+
+//API to get all workers list for admin panel
+
+const allWorkers = async (req, resp) => {
+  try {
+    
+    const workers = await workerModel.find({}).select('-password')  //will find all data excluding password
+    resp.json({success : true, workers})
+  } catch (error) {
+    console.log(error);
+    resp.json({ success: false, message: error.message });
+  }
+}
+
+export { addWorker, loginAdmin, allWorkers };
