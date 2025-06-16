@@ -5,6 +5,7 @@ import connectDB from './config/mongodb.js'
 import connectCloudinary from './config/cloudinary.js'
 import adminRouter from './routes/adminRouter.js'
 import workerRouter from './routes/workerRoute.js'
+import userRouter from './routes/userRoute.js'
 
 //app config
 const app = express()
@@ -22,6 +23,7 @@ app.use(cors())  //allowing cross origin resource sharing(frontend and backend)
 
 app.use('/api/admin', adminRouter)
 app.use('/api/worker', workerRouter)
+app.use('/api/user', userRouter)
 
 app.get('/', (req, resp)=>{
     resp.send('API WORKING:The Prince')

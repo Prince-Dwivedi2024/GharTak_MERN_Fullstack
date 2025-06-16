@@ -2,12 +2,20 @@ import React, { useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { SiHomeassistantcommunitystore } from "react-icons/si";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
 const Nav = () => {
   const navigate = useNavigate();
 
   const [showMenu, setShowMenu] = useState(false);
-  const [token, setToken] = useState(true); //if token means we are logged in
+  const {token, setToken} = useContext(AppContext)
+
+  const logOut = () => {
+    setToken('false')
+    localStorage.removeItem('token')
+  }
+
   return (
     <div className="flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400">
       <div className="font-bona font-semibold text-primary w-44 cursor-pointer text-4xl">
@@ -87,7 +95,7 @@ const Nav = () => {
                   My Appointments
                 </p>
                 <p
-                  onClick={() => setToken(false)}
+                  onClick={logOut}
                   className="hover:text-stone-400 cursor-pointer"
                 >
                   Logout
