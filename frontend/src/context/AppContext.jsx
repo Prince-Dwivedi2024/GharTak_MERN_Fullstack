@@ -4,11 +4,13 @@ import { toast } from 'react-toastify';
 
 export const AppContext = createContext();
 
-const currencySymbol = "$";
-const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
 const AppContextProvider = (props) => {
+  const currencySymbol = "$";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   const [workers, setWorkers] = useState([]);
+  const [token, setToken] = useState(localStorage.getItem('token')?)
+
 
   // API call to fetch worker data
   const getWorkersData = async () => {
@@ -33,6 +35,8 @@ const AppContextProvider = (props) => {
     workers,
     currencySymbol,
     getWorkersData,
+    token, setToken,
+    backendUrl
   };
 
   return (
