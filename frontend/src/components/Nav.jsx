@@ -12,8 +12,9 @@ const Nav = () => {
   const {token, setToken} = useContext(AppContext)
 
   const logOut = () => {
-    setToken('false')
+    setToken(null)
     localStorage.removeItem('token')
+    navigate('/login');
   }
 
   return (

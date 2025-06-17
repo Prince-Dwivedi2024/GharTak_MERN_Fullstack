@@ -9,7 +9,7 @@ const AppContextProvider = (props) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const [workers, setWorkers] = useState([]);
-  const [token, setToken] = useState(localStorage.getItem('token')?)
+  const [token, setToken] = useState(localStorage.getItem('token') || null);
 
 
   // API call to fetch worker data
