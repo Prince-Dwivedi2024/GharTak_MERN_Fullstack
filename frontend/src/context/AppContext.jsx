@@ -10,6 +10,7 @@ const AppContextProvider = (props) => {
 
   const [workers, setWorkers] = useState([]);
   const [token, setToken] = useState(localStorage.getItem('token') || null);
+  const [userData, setUserData] = useState(false)
 
 
   // API call to fetch worker data
@@ -27,16 +28,44 @@ const AppContextProvider = (props) => {
     }
   };
 
+  //function to fetch user data from API
+  const loadUserProfileData = async () => {
+
+    try {
+
+      const {data} = await axios.get(backendUrl + '/api/user/get-profile', {headers: {Authorization: `Bearer ${token}`,},} )
+      if(data.success){
+        setUserData(data.userData)
+      } else{
+        toast.error(data.message)
+      }
+      
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+
+  }
+
   useEffect(() => {
     getWorkersData();
   }, []);
+
+  useEffect(() => {
+    if(token){
+      loadUserProfileData()
+    } else{
+      setUserData(null)
+    }
+  }, [token]);
 
   const value = {
     workers,
     currencySymbol,
     getWorkersData,
     token, setToken,
-    backendUrl
+    backendUrl,
+    userData, setUserData, loadUserProfileData
   };
 
   return (
