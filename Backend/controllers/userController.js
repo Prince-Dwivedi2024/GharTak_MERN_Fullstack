@@ -2,6 +2,8 @@ import validator from 'validator'
 import bycrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import userModel from '../models/userModel.js'
+import {v2 as cloudinary} from 'cloudinary'
+import workerModel from '../models/workerModel.js'
 
 //API to register user
 const registerUser = async (req, resp) => {
@@ -74,4 +76,81 @@ const loginUser = async (req, resp) => {
     }
 }
 
-export {registerUser, loginUser} 
+//API to get user profile data
+const getProfile = async (req, resp) => {
+
+    try {
+
+        const {userId} = req
+        const userData = await userModel.findById(userId).select('-password')
+        resp.json({success: true, userData})
+  
+    } catch (error) {
+        console.log(error)
+        resp.json({success: false, message : error.message})
+    }
+
+}
+
+//API to update user profile
+const updateProfile = async (req, resp) => {
+
+    try {
+
+        const { name, phone, address, dob, gender } = req.body;
+        const userId = req.userId; //get it from middleware-authUser
+
+        const imageFile = req.file
+
+        if(!name || !phone || !dob || !gender) {
+            return resp.json({success: false, message: "Data Missing"})
+        }
+
+        await userModel.findByIdAndUpdate(userId,{name, phone, address: JSON.parse(address), dob, gender})
+
+        if(imageFile){
+            //upload image to cloudinary
+            const imageUpload = await cloudinary.uploader.upload(imageFile.path, {resource_type: 'image'}) 
+            const imageURL = imageUpload.secure_url
+            //save image url in user data
+            await userModel.findByIdAndUpdate(userId, {image: imageURL})
+        }
+
+        resp.json({success: true, message:"Profile Updated"})
+
+    } catch (error) {
+        console.log(error)
+        resp.json({success: false, message : error.message})
+    }
+
+}
+
+//API to book appointment
+const bookAppointment = async (req, resp) => {
+
+    try {
+
+        const {userId, docId, slotDate, slotTime} = req.body
+
+        const workData = await workerModel.findById(workId).select('-password')
+
+        if(!workData.available){
+            return resp.json({success: false, message: 'Worker is not available'})
+        }
+        //if doctor available
+        let slots_booked = workData.slots_booked
+        //checking for slot availability
+        if(slots_booked[slotDate]){
+            if(slots_booked[slotDate].includes(slotTime)){
+                 return resp.json({success: false, message: 'Slot not available'})
+            } else{
+                
+            }
+        }
+        
+    } catch (error) {
+        
+    }
+}
+
+export {registerUser, loginUser, getProfile, updateProfile} 
