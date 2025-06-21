@@ -1,10 +1,39 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {AppContext} from '../context/AppContext'
-import { assets } from '../assets/assets'
+
+import { useState } from 'react'
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const MyAppointments = () => {
 
-  const {workers} = useContext(AppContext)
+  const {backendUrl, token} = useContext(AppContext)
+
+  const [appointments, setAppointments] = useState([])
+
+  const getUserAppointments = async () => {
+
+    try {
+
+      const {data} = await axios.get(backendUrl + '/api/user/appointments', {headers: {Authorization: `Bearer ${token}`,},})
+
+      if(data.success){
+        setAppointments(data.appointments.reverse()) //reverse to get latest appointments at the top
+        console.log(data.appointments)
+      }
+      
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+    }
+  }
+
+  useEffect(() => {
+    if(token){
+      getUserAppointments()
+    }
+  }, [token])
+  
 
   return (
     <div>
@@ -12,18 +41,18 @@ const MyAppointments = () => {
         My bookings
       </p>
       <div>
-        {workers.slice(0,3).map((item, index) => (
+        {appointments.map((item, index) => (
           <div className='grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 py-2 border-b' key={index}>
             <div>
-              <img className='w-32 bg-amber-50' src= {item.image} alt="" />
+              <img className='w-32 bg-amber-50' src= {item.workData.image} alt="" />
             </div>
             <div className='flex-1 text-sm text-zinc-600'>
-              <p className='text-neutral-800 font-semibold'>{item.name}</p>
-              <p>{item.speciality}</p>
+              <p className='text-neutral-800 font-semibold'>{item.workData.name}</p>
+              <p>{item.workData.speciality}</p>
               <p className='text-zinc-700 font-medium mt-1'>Address</p>
-              <p className='text-xs'>{item.address.line1}</p>
-              <p className='text-xs'>{item.address.line2}</p>
-              <p className='text-xs mt-1'><span className='text-sm text-neutral-700 font-medium'>Date & Time</span> 05, june, 2025 | 8:30 PM</p>
+              <p className='text-xs'>{item.workData.address.line1}</p>
+              <p className='text-xs'>{item.workData.address.line2}</p>
+              <p className='text-xs mt-1'><span className='text-sm text-neutral-700 font-medium'>Date & Time</span> {item.slotDate} | {item.slotTime}</p>
             </div>
             <div></div>
              <div className='flex flex-col gap-2 justify-end'>

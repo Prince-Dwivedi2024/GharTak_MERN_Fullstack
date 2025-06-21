@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import userModel from '../models/userModel.js'
 import {v2 as cloudinary} from 'cloudinary'
 import workerModel from '../models/workerModel.js'
+import appointmentModel from '../models/appointmentModel.js'
 
 //API to register user
 const registerUser = async (req, resp) => {
@@ -130,7 +131,8 @@ const bookAppointment = async (req, resp) => {
 
     try {
 
-        const {userId, docId, slotDate, slotTime} = req.body
+        const userId = req.userId; //coming from our authUser middleware
+        const { workId, slotDate, slotTime } = req.body;
 
         const workData = await workerModel.findById(workId).select('-password')
 
@@ -143,14 +145,57 @@ const bookAppointment = async (req, resp) => {
         if(slots_booked[slotDate]){
             if(slots_booked[slotDate].includes(slotTime)){
                  return resp.json({success: false, message: 'Slot not available'})
-            } else{
-                
+            } else{ //book that slot
+                slots_booked[slotDate].push(slotTime)
             }
+        } else {
+               slots_booked[slotDate] = []
+               slots_booked[slotDate].push(slotTime)
         }
+
+        const userData = await userModel.findById(userId).select('-password')
+
+        delete workData.slots_booked  //we fethed whatever we need from workData, now we do not need it
+
+        const appointmentData = {
+            userId,
+            workId,
+            userData,
+            workData,
+            amount: workData.fees,
+            slotTime,
+            slotDate,
+            date: Date.now()
+        }
+
+        const newAppointment = new appointmentModel(appointmentData)
+        await newAppointment.save()
+
+        //save new slots data in workData
+        await workerModel.findByIdAndUpdate(workId, {slots_booked})
+
+        resp.json({success: true, message: 'Appointment Booked'})
         
     } catch (error) {
-        
+        console.log(error)
+        resp.json({success: false, message: error.message})
     }
 }
 
-export {registerUser, loginUser, getProfile, updateProfile} 
+//API to get user Appointments for frontend my-appointments page
+const listAppointment = async (req, resp) => {
+
+    try {
+
+        const userId = req.userId
+        const appointments = await appointmentModel.find({userId})
+
+        resp.json({success: true, appointments})
+        
+    } catch (error) {
+        console.log(error)
+        resp.json({success: false, message: error.message})
+    }
+}
+
+export {registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment} 

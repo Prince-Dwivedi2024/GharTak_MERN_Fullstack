@@ -1,5 +1,5 @@
 import express from 'express'
-import { registerUser, loginUser, getProfile, updateProfile } from '../controllers/userController.js'
+import { registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment } from '../controllers/userController.js'
 import authUser from '../middlewares/authUser.js'
 import upload from '../middlewares/multer.js'
 
@@ -10,5 +10,7 @@ userRouter.post('/login', loginUser)
 
 userRouter.get('/get-profile', authUser, getProfile)
 userRouter.post('/update-profile', upload.single('image'), authUser, updateProfile) //two middlewares. First pass the image and then authenticate user and decide whether upload or not
+userRouter.post('/book-appointment', authUser, bookAppointment)
+userRouter.get('/appointments', authUser, listAppointment)
 
 export default userRouter
