@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import workerModel from "../models/workerModel.js";
 import jwt from "jsonwebtoken";
+import appointmentModel from "../models/appointmentModel.js";
+import userModel from "../models/userModel.js";
 
 //API for adding worker
 const addWorker = async (req, resp) => {
@@ -129,4 +131,72 @@ const allWorkers = async (req, resp) => {
   }
 }
 
-export { addWorker, loginAdmin, allWorkers };
+//API to get all appointments list
+const appointmentsAdmin = async (req, resp) => {
+
+  try {
+
+    const appointments = await appointmentModel.find({})
+    resp.json({success: true, appointments})
+    
+  } catch (error) {
+    console.log(error);
+    resp.json({ success: false, message: error.message });
+  }
+
+}
+
+//API for appointment cancellation by admin panel
+const appointmentCancel = async (req, resp) => {
+
+    try {
+
+        const {appointmentId} = req.body
+
+        const appointmentData = await appointmentModel.findById(appointmentId)
+
+        await appointmentModel.findByIdAndUpdate(appointmentId, {cancelled:true})
+
+        //removing this doctor slot
+        const {workId, slotDate, slotTime} = appointmentData
+
+        const workerData = await workerModel.findById(workId)
+        let slots_booked = workerData.slots_booked
+        slots_booked[slotDate] = slots_booked[slotDate].filter(e => e !== slotTime)
+
+        await workerModel.findByIdAndUpdate(workId, {slots_booked})
+
+        resp.json({success:true, message:'Appointment Cancelled'})
+        
+    } catch (error) {
+        console.log(error)
+        resp.json({success: false, message: error.message})
+    }
+}
+
+//API to get dashboard data for admin panel
+const adminDashboard = async (req, resp) => {
+
+ try {
+
+  const workers = await workerModel.find({})
+  const users = await userModel.find({})
+  const appointments = await appointmentModel.find({})
+
+  const dashData = {
+    workers: workers.length,
+    appointments: appointments.length,
+    users: users.length,
+    latestAppointments: appointments.reverse().slice(0,5)
+  }
+
+  resp.json({success: true, dashData})
+  
+ } catch (error) {
+        console.log(error)
+        resp.json({success: false, message: error.message})
+ }
+
+}
+
+export { addWorker, loginAdmin, allWorkers, appointmentsAdmin, appointmentCancel, adminDashboard};

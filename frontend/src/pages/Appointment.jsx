@@ -30,6 +30,8 @@ const Appointment = () => {
   };
 
   const getAvailableSlots = async ()=>{
+
+    if (!workInfo || !workInfo.slots_booked) return;
   //  first clear previous slots
   setWorkSlots([])
   // getting current date

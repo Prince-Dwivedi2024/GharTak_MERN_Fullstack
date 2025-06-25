@@ -233,9 +233,63 @@ const cancelAppointment = async (req, resp) => {
     }
 }
 
+const razorpayInstance = new razorpay({
+    key_id:process.env.RAZORPAY_KEY_id,
+    key_secret:process.env.RAZORPAY_KEY_SECRET
+})
+
 //API to make payment of appointment using razorpay
 const paymentRazorpay = async (req, resp) => {
-    
+
+    const {appointmentId} = req.body
+    const appointmentData = await appointmentModel.findById(appointmentId)
+
+    if(!appointmentData || appointmentData.cancelled){
+        return resp.json({success: false, message:"Appointment cancelled or not found"})
+    }
+
+    //creating options for razorpay payment
+    try {
+
+        const options = {
+        amount: appointmentData.amount*100,
+        currency: process.env.CURRENCY,
+        receipt:appointmentId,
+    }
+
+    //creation of an order
+    const order = await razorpayInstance.orders.create(options)
+
+    resp.json({success:true, order})
+        
+    } catch (error) {
+        console.log(error)
+        resp.json({success: false, message: error.message})
+    }
+
 }
 
-export {registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment, cancelAppointment} 
+//API to verify payment of razorpay
+const verifyRazorpay = async (req, resp) => {
+
+    try {
+
+        const {razorpay_order_id} = req.body
+        const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id)
+
+        if(orderInfo.status === 'paid'){
+            await appointmentModel.findByIdAndUpdate(orderInfo.receipt, {payment:true})
+            resp.json({success:true, message:"Payment Successful"})
+        } else{
+            resp.json({success:false, message: "Payment Failed"})
+        }
+        
+    } catch (error) {
+        console.log(error)
+        resp.json({success: false, message: error.message})
+    }
+}
+
+
+
+export {registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment, cancelAppointment, paymentRazorpay, verifyRazorpay} 

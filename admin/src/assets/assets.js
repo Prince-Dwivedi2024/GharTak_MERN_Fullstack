@@ -10,6 +10,7 @@ import tick_icon from './tick_icon.svg'
 import appointments_icon from './appointments_icon.svg'
 import earning_icon from './earning_icon.svg'
 import users_icon from './users_icon.svg'
+import user_icon from './user_icon.svg'
 
 export const assets = {
     add_icon,
@@ -19,6 +20,7 @@ export const assets = {
     upload_area,
     home_icon,
     users_icon,
+    user_icon,
     people_icon,
     list_icon,
     tick_icon,
