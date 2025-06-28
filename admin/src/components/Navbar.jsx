@@ -2,10 +2,12 @@ import React, { useContext } from "react";
 import { assets } from "../assets/assets";
 import { AdminContext } from "../context/AdminContext";
 import { useNavigate, Link } from "react-router-dom";
+import { WorkerContext } from "../context/WorkerContext";
 
 const Navbar = () => {
 
    const {adminToken, setAdminToken} = useContext(AdminContext)
+   const {workerToken, setWorkerToken} = useContext(WorkerContext)
 
    const navigate = useNavigate()
 
@@ -13,6 +15,8 @@ const Navbar = () => {
     navigate('/')
     adminToken && setAdminToken('')
     adminToken && localStorage.removeItem('adminToken')
+    workerToken && setWorkerToken('')
+    workerToken && localStorage.removeItem('workerToken')
    }
 
   return (

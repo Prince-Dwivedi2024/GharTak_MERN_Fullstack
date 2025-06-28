@@ -8,15 +8,20 @@ import Dashboard from './pages/Admin/Dashboard';
 import Appointments from './pages/Admin/Appointments';
 import AddWorker from './pages/Admin/AddWorker';
 import WorkersList from './pages/Admin/WorkersList';
+import { WorkerContext } from './context/WorkerContext';
+import WorkerDashboard from './pages/Worker/WorkerDashboard';
+import WorkerProfile from './pages/Worker/WorkerProfile';
+import WorkerAppointments from './pages/Worker/WorkerAppointments';
 
 
 const App = () => {
   const { adminToken } = useContext(AdminContext);
+  const {workerToken} = useContext(WorkerContext)
 
   const router = createBrowserRouter([
     {
       path: "/",
-      element: adminToken ? 
+      element: adminToken || workerToken ? 
       <div>
       <div className='bg-[#F8F9FD]'><Navbar /></div>
       <div className='flex items-start'>
@@ -27,6 +32,7 @@ const App = () => {
       : <Login />,
 
       children: [
+        //admin sidebar routes
         {
           path: '/dashboard',
           element: <Dashboard />
@@ -45,6 +51,22 @@ const App = () => {
         {
           path: '/workersList',
           element: <WorkersList />
+        },
+
+        //worker sidebar routes
+        {
+          path: '/worker-dashboard',
+          element: <WorkerDashboard />
+        },
+
+        {
+          path: '/worker-appointments',
+          element: <WorkerAppointments />
+        },
+
+        {
+          path: '/worker-profile',
+          element: <WorkerProfile />
         }
       ]
     }

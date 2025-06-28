@@ -73,6 +73,9 @@ const Nav = () => {
         >
           CONTACT
         </NavLink>
+
+        <a className="border px-5 text-xs py-1.5 rounded-full" target="_blank" href="http://localhost:5174/">Admin Panel</a>
+
       </div>
 
       <div className="flex items-center gap-4">

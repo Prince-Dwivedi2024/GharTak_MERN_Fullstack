@@ -3,6 +3,7 @@ import { assets } from '../assets/assets'
 import {AdminContext} from '../context/AdminContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { WorkerContext } from '../context/WorkerContext'
 
 
 const Login = () => {
@@ -11,7 +12,8 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const {setAdminToken, backendUrl} = useContext(AdminContext)
+  const {setAdminToken, backendUrl, } = useContext(AdminContext)
+  const {setWorkerToken} = useContext(WorkerContext)
 
   //when we will submit form, this function wil be executed
   const onSubmitHandler = async (event) => {
@@ -34,6 +36,19 @@ const Login = () => {
       }
       else{  //worker Api calling
 
+        const {data} = await axios.post(backendUrl + '/api/worker/login', {email, password})
+
+        if(data.success){
+          //we will get one token, set this out
+          localStorage.setItem('workerToken', data.token)
+          setWorkerToken(data.token)
+          console.log(data.token);
+          
+        }
+        else{
+          toast.error(data.message)
+        }
+
       }
       
     } catch (error) {
@@ -42,7 +57,7 @@ const Login = () => {
   }
 
   return (
-   <form onClick={onSubmitHandler} className='min-h-[80vh] flex items-center'>
+   <form className='min-h-[80vh] flex items-center'>
     <div className='flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 border rounded-xl text-[#5E5E5E] shadow-lg'>
         <p className='text-2xl font-semibold m-auto'>
           <span className='text-primary'>{state}</span> Login </p>
@@ -54,7 +69,7 @@ const Login = () => {
           <p>Password</p>
           <input onChange={(e) => setPassword(e.target.value)} value={password} className='border border-[#DADADA] rounded w-full p-2 mt-1' type="password" required />
         </div>
-        <button className='bg-primary text-white w-full py-2 rounded-md text-base'>Login</button>
+        <button onClick={onSubmitHandler} className='bg-primary text-white w-full py-2 rounded-md text-base'>Login</button>
         {
           state === 'Admin'
           ? <p>Worker Login? <span className='text-primary underline cursor-pointer' onClick={()=> setState('Worker')}>Click here</span></p>
