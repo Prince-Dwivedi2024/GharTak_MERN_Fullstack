@@ -74,7 +74,7 @@ const Nav = () => {
           CONTACT
         </NavLink>
 
-        <a className="border px-5 text-xs py-1.5 rounded-full" target="_blank" href="http://localhost:5174/">Admin Panel</a>
+        <a className="border px-5 text-xs py-1.5 rounded-full" target="_blank" href="https://ghartakadminpanel.vercel.app/">Admin Panel</a>
 
       </div>
 
