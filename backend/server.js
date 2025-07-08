@@ -5,28 +5,39 @@ import connectDB from './config/mongodb.js'
 import connectCloudinary from './config/cloudinary.js'
 import adminRouter from './routes/adminRouter.js'
 import workerRouter from './routes/workerRoute.js'
-import userRouter from './routes/userRoute.js'
+import userRouter from './routes/userRoute.js'  //dkjndf
 
-//app config
+// ✅ First, create the Express app
 const app = express()
+
+// ✅ Define allowed frontend origins (like Vercel)
+const allowedOrigins = ['https://ghar-tak-mern-fullstack.vercel.app']
+
+// ✅ Then, use CORS with allowed origin
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+}))
+
+// ✅ Port setup
 const port = process.env.PORT || 4000
-//connection with database
+
+// ✅ Connect to database and cloudinary
 connectDB()
-//connect to cloudinary 
 connectCloudinary()
 
-//middlewares
+// ✅ Middleware
 app.use(express.json())
-app.use(cors())  //allowing cross origin resource sharing(frontend and backend)
 
-//api endpoint
-
+// ✅ Routers
 app.use('/api/admin', adminRouter)
 app.use('/api/worker', workerRouter)
 app.use('/api/user', userRouter)
 
-app.get('/', (req, resp)=>{
-    resp.send('API WORKING:The Prince')
+app.get('/', (req, resp) => {
+  resp.send('API WORKING: The Prince')
 })
 
-app.listen(port, ()=> console.log("Server Started", port))  
+// ✅ Start server
+app.listen(port, () => console.log("Server Started on port", port))
