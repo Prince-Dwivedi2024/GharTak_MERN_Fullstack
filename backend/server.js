@@ -11,7 +11,7 @@ import userRouter from './routes/userRoute.js'  //dkjndf
 const app = express()
 
 // ✅ Define allowed frontend origins (like Vercel)
-const allowedOrigins = ['https://ghar-tak-mern-fullstack.vercel.app', 'https://ghartakadminpanel.vercel.app/']
+const allowedOrigins = ['https://ghar-tak-mern-fullstack.vercel.app', 'https://ghartakadminpanel.vercel.app']
 
 // ✅ Then, use CORS with allowed origin
 app.use(cors({
