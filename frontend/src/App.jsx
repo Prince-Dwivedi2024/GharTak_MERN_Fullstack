@@ -14,6 +14,9 @@ import Login from './pages/Login'
 import Contact from './pages/Contact'
 import Appointment from './pages/Appointment'
 
+import AOS from "aos";
+import "aos/dist/aos.css";
+
 // PageWrapper handles animations for each page
 const PageWrapper = ({ children }) => (
   <motion.div
@@ -28,6 +31,22 @@ const PageWrapper = ({ children }) => (
 
 const App = () => {
   const location = useLocation() // Track current route for AnimatePresence
+
+   // ✅ Initialize AOS once
+  useEffect(() => {
+    AOS.init({
+      duration: 800, // default animation duration
+      once: true,     // whether animation should happen only once while scrolling down
+      easing: "ease-in-out",
+      offset: 60,     // how early the animation starts
+    });
+  }, []);
+
+  // ✅ Re-initialize on route change (optional, for better performance)
+  useEffect(() => {
+  AOS.refresh();
+}, [location.pathname]);
+
 
   return (
     <div className="mx-4 sm:mx-[10%]">
