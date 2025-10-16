@@ -71,7 +71,7 @@ const Workers = () => {
         </div>
       ) : (
         // ✅ Show cards once data is ready
-        <div data-aos="zoom-in" data-aos-delay="200" className="w-full grid grid-cols-auto gap-4 gap-y-6">
+        <div data-aos="zoom-out" data-aos-delay="200" className="w-full grid grid-cols-auto gap-4 gap-y-6">
           {filterWork.map((item, index) => (
             <div
               onClick={() => navigate(`/appointment/${item._id}`)}
