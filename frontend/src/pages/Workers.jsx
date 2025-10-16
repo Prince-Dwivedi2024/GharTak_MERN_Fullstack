@@ -6,6 +6,7 @@ const Workers = () => {
     
    const {workers} = useContext(AppContext)
    const navigate = useNavigate()
+   const [loading, setLoading] = useState(true);
    
    const [showFilter, setShowFilter] = useState(false)
    const {speciality} = useParams()   //to fetch speciality id from the home page
@@ -24,6 +25,15 @@ const Workers = () => {
    useEffect(() => {
      applyFilter()
    }, [speciality, workers])
+
+   useEffect(() => {
+    // Whenever filterWork changes and has data, stop loading
+    if (filterWork && filterWork.length > 0) {
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
+  }, [filterWork]);
    
    
   return (
@@ -41,27 +51,46 @@ const Workers = () => {
           <p onClick={() => speciality === 'Painter' ? navigate('/workers') : navigate('/workers/Painter')} className= {`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer ${speciality === "Painter" ? "bg-amber-100 text-black" : ""}`}>Painter</p>
           <p onClick={() => speciality === 'Plumber' ? navigate('/workers') : navigate('/workers/Plumber')} className= {`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer ${speciality === "Plumber" ? "bg-amber-100 text-black" : ""}`}>Plumber</p>
         </div>
-        <div className='w-full grid grid-cols-auto gap-4 gap-y-6'>
-          {
-            filterWork.map((item, index) => (
-          <div onClick={() => navigate(`/appointment/${item._id}`)}
-            className="border border-orange-200 rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500"
-            key={index}
-          >
-            <img className="bg-orange-50" src={item.image} alt="" />
-            <div className="p-4">
-              <div className={`flex items-center gap-2 text-sm text-center ${item.available ? 'text-green-500' : 'text-gray-500'}`}>
-                <p className={`w-2 h-2 ${item.available ? 'bg-green-500' : 'bg-gray-500'} rounded-full`}></p>{" "}
-                <p>{item.available ? 'Available' : 'Not Available'}</p>
-              </div>
-              <p className="text-gray-900 text-lg font-medium">{item.name}</p>
-              <p className="text-gray-600 text-sm">{item.speciality}</p>
-            </div>
-          </div>
-        )
-            )
-          }
+
+       <div className='flex-1 flex justify-center items-center'>
+             {loading ? (
+        //  Loader while filterWork is empty or loading
+        <div className="flex justify-center items-center min-h-[70vh] w-full">
+          <div className="border-4 border-orange-200 border-t-orange-500 rounded-full w-12 h-12 animate-spin"></div>
         </div>
+      ) : (
+        // ✅ Show cards once data is ready
+        <div className="w-full grid grid-cols-auto gap-4 gap-y-6">
+          {filterWork.map((item, index) => (
+            <div
+              onClick={() => navigate(`/appointment/${item._id}`)}
+              className="border border-orange-200 rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500"
+              key={index}
+            >
+              <img className="bg-orange-50" src={item.image} alt={item.name} />
+              <div className="p-4">
+                <div
+                  className={`flex items-center gap-2 text-sm text-center ${
+                    item.available ? "text-green-500" : "text-gray-500"
+                  }`}
+                >
+                  <p
+                    className={`w-2 h-2 ${
+                      item.available ? "bg-green-500" : "bg-gray-500"
+                    } rounded-full`}
+                  ></p>{" "}
+                  <p>{item.available ? "Available" : "Not Available"}</p>
+                </div>
+                <p className="text-gray-900 text-lg font-medium">{item.name}</p>
+                <p className="text-gray-600 text-sm">{item.speciality}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+       </div>
+
+        
       </div>
     </div>
   )

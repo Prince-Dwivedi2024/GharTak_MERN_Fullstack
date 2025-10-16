@@ -1,16 +1,39 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
+
 import Header from '../components/Header'
 import SpecialityMenu from '../components/SpecialityMenu'
 import TopWorkers from '../components/TopWorkers'
 import Banner from '../components/Banner'
 
 const Home = () => {
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // animation duration (ms)
+      once: true,     // whether animation should happen only once
+      offset: 100     // offset (in px) from the original trigger point
+    });
+  }, []);
+
   return (
     <div>
-      <Header/>
-      <SpecialityMenu/>
-      <TopWorkers/>
-      <Banner/>
+      <div data-aos="fade-down">
+        <Header />
+      </div>
+
+      <div data-aos="fade-up" data-aos-delay="100">
+        <SpecialityMenu />
+      </div>
+
+      <div data-aos="zoom-in" data-aos-delay="200">
+        <TopWorkers />
+      </div>
+
+      <div data-aos="fade-up" data-aos-delay="300">
+        <Banner />
+      </div>
     </div>
   )
 }

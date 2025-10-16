@@ -1,15 +1,17 @@
 
 import { createRoot } from 'react-dom/client'
+import App from './App'
+import AppContextProvider from './context/AppContext'
+import { BrowserRouter } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
 import './index.css'
-import App from './App.jsx'
-import AppContextProvider from './context/AppContext.jsx'
-import { ToastContainer, toast } from 'react-toastify';
 
 createRoot(document.getElementById('root')).render(
-  
-    <AppContextProvider>
-        <App />
-        <ToastContainer />
-    </AppContextProvider>
-  
+  <AppContextProvider>
+    <BrowserRouter>
+      <App />
+      <ToastContainer />
+    </BrowserRouter>
+  </AppContextProvider> 
 )
+
