@@ -23,7 +23,7 @@ const Home = () => {
         <Header />
       </div>
 
-      <div data-aos="fade-up" data-aos-delay="100">
+      <div data-aos="zoom-in" data-aos-delay="200">
         <SpecialityMenu />
       </div>
 
@@ -31,7 +31,7 @@ const Home = () => {
         <TopWorkers />
       </div>
 
-      <div data-aos="fade-up" data-aos-delay="300">
+      <div data-aos="zoom-in" data-aos-delay="200">
         <Banner />
       </div>
     </div>
