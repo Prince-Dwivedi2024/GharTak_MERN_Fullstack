@@ -20,7 +20,7 @@ const PageWrapper = ({ children }) => (
     initial={{ opacity: 0, y: 30 }}     // Start slightly down & invisible
     animate={{ opacity: 1, y: 0 }}      // Animate to fully visible
     exit={{ opacity: 0, y: -30 }}       // Exit upwards & fade out
-    transition={{ duration: 0.5, ease: 'easeInOut' }}
+    transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
   >
     {children}
   </motion.div>
