@@ -2,6 +2,8 @@ import React from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 
+import React, { useEffect } from "react";
+
 import Nav from './components/Nav'
 import Footer from './components/Footer'
 
