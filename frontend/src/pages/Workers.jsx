@@ -2,8 +2,7 @@ import React, { useContext, useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
 
-import AOS from 'aos'
-import 'aos/dist/aos.css'
+
 
 const Workers = () => {
     
@@ -37,14 +36,6 @@ const Workers = () => {
       setLoading(true);
     }
   }, [filterWork]);
-
-  useEffect(() => {
-      AOS.init({
-        duration: 1000, // animation duration (ms)
-        once: true,     // whether animation should happen only once
-        offset: 100     // offset (in px) from the original trigger point
-      });
-    }, []);
    
    
   return (
@@ -71,7 +62,7 @@ const Workers = () => {
         </div>
       ) : (
         // ✅ Show cards once data is ready
-        <div data-aos="zoom-out" data-aos-delay="200" className="w-full grid grid-cols-auto gap-4 gap-y-6">
+        <div className="w-full grid grid-cols-auto gap-4 gap-y-6">
           {filterWork.map((item, index) => (
             <div
               onClick={() => navigate(`/appointment/${item._id}`)}
